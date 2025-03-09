@@ -1,11 +1,18 @@
-// assets/js/scripts.js
+// Place this in your head tag to ensure it loads first
+// <script>
+//   // Block rendering and create overlay
+//   document.documentElement.style.visibility = 'hidden';
+//   window.addEventListener('load', function() {
+//     document.documentElement.style.visibility = 'visible';
+//   });
+// </script>
 
-// Self-executing function to add the loader as early as possible
+// assets/js/scripts.js
 (function() {
-    // Create a style element to add CSS for the loader
-    const style = document.createElement('style');
-    style.textContent = `
-      .page-loader {
+    // Create and append the loader immediately when the script runs
+    const loaderStyle = document.createElement('style');
+    loaderStyle.innerHTML = `
+      #page-loader-overlay {
         position: fixed;
         top: 0;
         left: 0;
@@ -16,11 +23,10 @@
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        z-index: 9999;
-        transition: opacity 0.5s ease-out, visibility 0.5s ease-out;
+        z-index: 10000;
+        transition: opacity 0.5s ease-out;
       }
-  
-      .loader-circle {
+      .loader-spinner {
         width: 40px;
         height: 40px;
         border: 3px solid #f3f3f3;
@@ -28,130 +34,116 @@
         border-radius: 50%;
         animation: spin 1s linear infinite;
       }
-  
       .loader-text {
         margin-top: 15px;
         font-family: Arial, sans-serif;
         color: #333;
         font-size: 16px;
       }
-  
       @keyframes spin {
         0% { transform: rotate(0deg); }
         100% { transform: rotate(360deg); }
       }
-      
-      body {
-        opacity: 0;
-        transition: opacity 0.5s ease;
-      }
-      
-      body.content-loaded {
-        opacity: 1;
-      }
     `;
-    
-    // Inject the style into the head
-    document.head.appendChild(style);
-    
-    // Create and add the loader div
+    document.head.appendChild(loaderStyle);
+  
+    // Create the loader element
     const loader = document.createElement('div');
-    loader.className = 'page-loader';
+    loader.id = 'page-loader-overlay';
     loader.innerHTML = `
-      <div class="loader-circle"></div>
+      <div class="loader-spinner"></div>
       <div class="loader-text">Loading...</div>
     `;
     
-    // Add the loader to the page as soon as the DOM begins to load
-    document.addEventListener('DOMContentLoaded', function() {
+    // Add the loader to the body
+    if (document.body) {
       document.body.appendChild(loader);
-    });
-  })();
-  
-  // Main script executed when DOM is ready
-  document.addEventListener('DOMContentLoaded', function() {
-    // Track loading status
+    } else {
+      // If the body isn't available yet, wait for it
+      window.addEventListener('DOMContentLoaded', function() {
+        document.body.appendChild(loader);
+      });
+    }
+    
+    // Track component loading
     let headerLoaded = false;
     let footerLoaded = false;
     
-    // Function to check if everything is loaded
-    function checkAllLoaded() {
+    // Hide loader when everything is ready
+    function hideLoader() {
       if (headerLoaded && footerLoaded) {
-        // All components loaded
-        setTimeout(() => {
-          // Hide loader with smooth fade out
-          const loader = document.querySelector('.page-loader');
-          if (loader) {
-            loader.style.opacity = '0';
-            loader.style.visibility = 'hidden';
-            // Remove loader after transition completes
-            setTimeout(() => {
-              if (loader && loader.parentNode) {
-                loader.parentNode.removeChild(loader);
-              }
-            }, 500);
-          }
-          
-          // Show body content with fade in
-          document.body.classList.add('content-loaded');
-        }, 300);
+        const loader = document.getElementById('page-loader-overlay');
+        if (loader) {
+          loader.style.opacity = '0';
+          setTimeout(function() {
+            if (loader.parentNode) {
+              loader.parentNode.removeChild(loader);
+            }
+            // Make page visible if it was hidden
+            document.documentElement.style.visibility = 'visible';
+          }, 500);
+        }
       }
     }
     
-    // Load Header
-    fetch('/assets/includes/header.html')
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Network response was not ok ' + response.statusText);
+    // Function to load components after DOM is ready
+    function loadComponents() {
+      // Load Header
+      const headerRequest = new XMLHttpRequest();
+      headerRequest.open('GET', '/assets/includes/header.html', true);
+      headerRequest.onreadystatechange = function() {
+        if (this.readyState === 4) {
+          if (this.status === 200) {
+            document.body.insertAdjacentHTML('afterbegin', this.responseText);
+          } else {
+            console.error('Error loading header');
+            document.body.insertAdjacentHTML('afterbegin', '<header><h1>Header Loading Failed</h1></header>');
+          }
+          headerLoaded = true;
+          hideLoader();
         }
-        return response.text();
-      })
-      .then(data => {
-        document.body.insertAdjacentHTML('afterbegin', data);
-        headerLoaded = true;
-        checkAllLoaded();
-      })
-      .catch(error => {
-        console.error('Error loading header:', error);
-        // Fallback: Add a placeholder header
-        document.body.insertAdjacentHTML('afterbegin', '<header><h1>Header Loading Failed</h1></header>');
-        headerLoaded = true;
-        checkAllLoaded();
-      });
-  
-    // Load Footer
-    fetch('../includes/footer.html')
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Network response was not ok ' + response.statusText);
-        }
-        return response.text();
-      })
-      .then(data => {
-        document.body.insertAdjacentHTML('beforeend', data);
-        footerLoaded = true;
-        checkAllLoaded();
-      })
-      .catch(error => {
-        console.error('Error loading footer:', error);
-        // Fallback: Add a placeholder footer
-        document.body.insertAdjacentHTML('beforeend', '<footer><p>Footer Loading Failed</p></footer>');
-        footerLoaded = true;
-        checkAllLoaded();
-      });
+      };
+      headerRequest.send();
       
-    // Fallback in case something goes wrong
-    setTimeout(() => {
-      const loader = document.querySelector('.page-loader');
-      if (loader && loader.style.visibility !== 'hidden') {
-        console.warn('Loader timeout reached, forcing page to display');
-        
-        if (loader) {
-          loader.style.opacity = '0';
-          loader.style.visibility = 'hidden';
+      // Load Footer
+      const footerRequest = new XMLHttpRequest();
+      footerRequest.open('GET', '../includes/footer.html', true);
+      footerRequest.onreadystatechange = function() {
+        if (this.readyState === 4) {
+          if (this.status === 200) {
+            document.body.insertAdjacentHTML('beforeend', this.responseText);
+          } else {
+            console.error('Error loading footer');
+            document.body.insertAdjacentHTML('beforeend', '<footer><p>Footer Loading Failed</p></footer>');
+          }
+          footerLoaded = true;
+          hideLoader();
         }
-        
-        document.body.classList.add('content-loaded');
-      }
-    }, 5000); // 5 second maximum loading time
-  });
+      };
+      footerRequest.send();
+      
+      // Fallback - ensure page becomes visible after 5 seconds max
+      setTimeout(function() {
+        const loader = document.getElementById('page-loader-overlay');
+        if (loader && loader.style.opacity !== '0') {
+          console.warn('Loader timeout reached, forcing display');
+          if (loader) {
+            loader.style.opacity = '0';
+            setTimeout(function() {
+              if (loader.parentNode) {
+                loader.parentNode.removeChild(loader);
+              }
+              document.documentElement.style.visibility = 'visible';
+            }, 500);
+          }
+        }
+      }, 5000);
+    }
+    
+    // Once DOM is ready, load components
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', loadComponents);
+    } else {
+      loadComponents();
+    }
+  })();
