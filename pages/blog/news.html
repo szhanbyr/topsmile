@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Новости - TopSmileDesign</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+        
+        body {
+            line-height: 1.6;
+            color: #333;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+        
+        /* Header Styles */
+        header {
+            background-color: #fff;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo img {
+            width: 50px;
+            height: auto;
+            margin-right: 10px;
+        }
+        
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .logo-text span {
+            color: #1e88e5;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+        
+        nav ul li {
+            margin-left: 20px;
+            position: relative;
+        }
+        
+        nav ul li a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            padding: 5px;
+            transition: color 0.3s;
+        }
+        
+        nav ul li a:hover {
+            color: #1e88e5;
+        }
+        
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            min-width: 200px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+            border-radius: 4px;
+        }
+        
+        .dropdown-content a {
+            color: #333;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+        
+        .dropdown-content a:hover {
+            background-color: #f1f1f1;
+        }
+        
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+        
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(to right, #1e88e5, #4fc3f7);
+            color: white;
+            padding: 60px 0;
+            display: flex;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero-content {
+            width: 60%;
+            padding-right: 20px;
+        }
+        
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+        
+        .hero p {
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+        }
+        
+        .hero-image {
+            width: 40%;
+            position: relative;
+        }
+        
+        .hero-image img {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+            object-fit: cover;
+        }
+        
+        .btn {
+            display: inline-block;
+            background-color: white;
+            color: #1e88e5;
+            padding: 10px 25px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s;
+            border: 2px solid white;
+        }
+        
+        .btn:hover {
+            background-color: transparent;
+            color: white;
+        }
+        
+        /* Section Styles */
+        section {
+            padding: 60px 0;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 40px;
+            color: #1e88e5;
+            font-size: 2rem;
+        }
+        
+        /* Services Section */
+        .services {
+            background-color: white;
+        }
+        
+        .service {
+            display: flex;
+            margin-bottom: 40px;
+        }
+        
+        .service-image {
+            width: 40%;
+            padding-right: 20px;
+        }
+        
+        .service-image img {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .service-content {
+            width: 60%;
+        }
+        
+        .service-title {
+            color: #1e88e5;
+            margin-bottom: 10px;
+            font-size: 1.5rem;
+        }
+        
+        .service-list {
+            padding-left: 20px;
+            margin-top: 15px;
+        }
+        
+        .service-list li {
+            margin-bottom: 8px;
+        }
+        
+        /* Footer */
+        footer {
+            background-color: #333;
+            color: white;
+            padding: 40px 0 20px;
+        }
+        
+        .footer-container {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+        
+        .footer-section {
+            width: 30%;
+            margin-bottom: 20px;
+        }
+        
+        .footer-section h3 {
+            margin-bottom: 15px;
+            color: #4fc3f7;
+        }
+        
+        .footer-section p, .footer-section a {
+            color: #ddd;
+            text-decoration: none;
+        }
+        
+        .footer-section a:hover {
+            color: #4fc3f7;
+        }
+        
+        .social-icons {
+            display: flex;
+            margin-top: 15px;
+        }
+        
+        .social-icons a {
+            display: block;
+            width: 40px;
+            height: 40px;
+            background-color: #4a4a4a;
+            border-radius: 50%;
+            margin-right: 10px;
+            text-align: center;
+            line-height: 40px;
+            transition: background-color 0.3s;
+        }
+        
+        .social-icons a:hover {
+            background-color: #1e88e5;
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid #4a4a4a;
+            margin-top: 20px;
+        }
+        
+        /* Chat Widget */
+        .chat-widget {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 999;
+        }
+        
+        .chat-button {
+            width: 60px;
+            height: 60px;
+            background-color: #25D366;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+        
+        .chat-button:hover {
+            transform: scale(1.1);
+        }
+        
+        .chat-text {
+            position: absolute;
+            right: 70px;
+            background-color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            font-size: 0.8rem;
+            width: 120px;
+            display: none;
+        }
+        
+        .chat-button:hover .chat-text {
+            display: block;
+        }
+        
+        /* Accessibility Button */
+        .accessibility-btn {
+            position: fixed;
+            left: 10px;
+            top: 80px;
+            background-color: #333;
+            color: white;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 50%;
+            z-index: 100;
+            cursor: pointer;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header-container {
+                flex-direction: column;
+            }
+            
+            nav ul {
+                margin-top: 15px;
+            }
+            
+            .hero-content, .hero-image,
+            .service-image, .service-content,
+            .footer-section {
+                width: 100%;
+                padding-right: 0;
+                margin-bottom: 20px;
+            }
+            
+            .hero {
+                flex-direction: column;
+            }
+            
+            .service {
+                flex-direction: column;
+            }
+            
+            .service-image {
+                order: 1;
+            }
+            
+            .service-content {
+                order: 2;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1>Новости клиники</h1>
+                <p>Будьте в курсе последних событий TopSmileDesign! Мы регулярно обновляем новости о новом оборудовании, акциях, достижениях нашей команды и многом другом.</p>
+                <a href="#news" class="btn">Читать новости</a>
+            </div>
+            <div class="hero-image">
+                <img src="/api/placeholder/500/400" alt="Новости клиники">
+            </div>
+        </div>
+    </section>
+
+    <!-- News Section -->
+    <section class="services" id="news">
+        <div class="container">
+            <h2 class="section-title">Последние новости</h2>
+            <div class="service">
+                <div class="service-image">
+                    <img src="/api/placeholder/400/320" alt="Новое оборудование">
+                </div>
+                <div class="service-content">
+                    <h3 class="service-title">Новое оборудование в клинике</h3>
+                    <p>В марте 2025 года мы обновили нашу клинику, установив современный 3D-сканер для точной диагностики и планирования имплантации. Это позволяет нам повысить точность процедур и сократить время лечения.</p>
+                    <ul class="service-list">
+                        <li>Дата установки: 01.03.2025</li>
+                        <li>Преимущества: точность до 0.1 мм</li>
+                        <li>Доступно для всех пациентов</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="service">
+                <div class="service-content">
+                    <h3 class="service-title">Акция на отбеливание зубов</h3>
+                    <p>Только до конца марта 2025 года! Запишитесь на профессиональное отбеливание зубов системой Zoom со скидкой 20%. Успейте подарить себе белоснежную улыбку к весне.</p>
+                    <ul class="service-list">
+                        <li>Срок действия: до 31.03.2025</li>
+                        <li>Скидка: 20% на Zoom</li>
+                        <li>Запись по телефону или онлайн</li>
+                    </ul>
+                </div>
+                <div class="service-image">
+                    <img src="/api/placeholder/400/320" alt="Акция">
+                </div>
+            </div>
+            <div class="service">
+                <div class="service-image">
+                    <img src="/api/placeholder/400/320" alt="Конференция">
+                </div>
+                <div class="service-content">
+                    <h3 class="service-title">Наша команда на международной конференции</h3>
+                    <p>В феврале 2025 года наши стоматологи приняли участие в международной конференции по имплантологии в Берлине. Мы привезли новые знания и технологии, чтобы улучшить качество лечения.</p>
+                    <ul class="service-list">
+                        <li>Дата: 15-17.02.2025</li>
+                        <li>Место: Берлин, Германия</li>
+                        <li>Тема: инновации в имплантологии</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container footer-container">
+            <div class="footer-section">
+                <h3>О TopSmileDesign</h3>
+                <p>Мы стремимся предоставлять высококачественное стоматологическое обслуживание в комфортной и дружественной атмосфере. Наша цель — помочь вам достичь и поддерживать оптимальное здоровье полости рта.</p>
+            </div>
+            <div class="footer-section">
+                <h3>Контактная информация</h3>
+                <p>ул. Ленинская, 123</p>
+                <p>Москва, Россия</p>
+                <p>Телефон: +7 (495) 123-45-67</p>
+                <p>Email: info@topsmiledesign.ru</p>
+            </div>
+            <div class="footer-section">
+                <h3>Часы работы</h3>
+                <p>Пн-Пт: 9:00 - 20:00</p>
+                <p>Сб: 10:00 - 17:00</p>
+                <p>Вс: Закрыто</p>
+                <div class="social-icons">
+                    <a href="#"><svg width="16" height="16" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 2.04C6.5 2.04 2 6.53 2 12.06C2 17.06 5.66 21.21 10.44 21.96V14.96H7.9V12.06H10.44V9.85C10.44 7.34 11.93 5.96 14.22 5.96C15.31 5.96 16.45 6.15 16.45 6.15V8.62H15.19C13.95 8.62 13.56 9.39 13.56 10.18V12.06H16.34L15.89 14.96H13.56V21.96C18.34 21.21 22 17.06 22 12.06C22 6.53 17.5 2.04 12 2.04Z"/>
+                    </svg></a>
+                    <a href="#"><svg width="16" height="16" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M7.8 2H16.2C19.4 2 22 4.6 22 7.8V16.2C22 19.4 19.4 22 16.2 22H7.8C4.6 22 2 19.4 2 16.2V7.8C2 4.6 4.6 2 7.8 2ZM7.6 4C5.61 4 4 5.61 4 7.6V16.4C4 18.39 5.61 20 7.6 20H16.4C18.39 20 20 18.39 20 16.4V7.6C20 5.61 18.39 4 16.4 4H7.6ZM17.25 5.5C17.94 5.5 18.5 6.06 18.5 6.75C18.5 7.44 17.94 8 17.25 8C16.56 8 16 7.44 16 6.75C16 6.06 16.56 5.5 17.25 5.5ZM12 7C14.76 7 17 9.24 17 12C17 14.76 14.76 17 12 17C9.24 17 7 14.76 7 12C7 9.24 9.24 7 12 7ZM12 9C10.35 9 9 10.35 9 12C9 13.65 10.35 15 12 15C13.65 15 15 13.65 15 12C15 10.35 13.65 9 12 9Z"/>
+                    </svg></a>
+                    <a href="#"><svg width="16" height="16" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M22.46 6C21.69 6.35 20.86 6.58 20 6.69C20.88 6.16 21.56 5.32 21.88 4.31C21.05 4.81 20.13 5.16 19.16 5.36C18.37 4.5 17.26 4 16 4C13.65 4 11.73 5.92 11.73 8.29C11.73 8.63 11.77 8.96 11.84 9.27C8.28 9.09 5.11 7.38 3 4.79C2.63 5.42 2.42 6.16 2.42 6.94C2.42 8.43 3.17 9.75 4.33 10.5C3.62 10.5 2.96 10.3 2.38 10V10.03C2.38 12.11 3.86 13.85 5.82 14.24C5.46 14.34 5.08 14.39 4.69 14.39C4.42 14.39 4.15 14.36 3.89 14.31C4.43 16 6 17.26 7.89 17.29C6.43 18.45 4.58 19.13 2.56 19.13C2.22 19.13 1.88 19.11 1.54 19.07C3.44 20.29 5.7 21 8.12 21C16 21 20.33 14.46 20.33 8.79C20.33 8.6 20.33 8.42 20.32 8.23C21.16 7.63 21.88 6.87 22.46 6Z"/>
+                    </svg></a>
+                </div>
+            </div>
+        </div>
+        <div class="container copyright">
+            <p>© 2025 TopSmileDesign. Все права защищены.</p>
+        </div>
+    </footer>
+
+    <!-- Chat Widget -->
+    <div class="chat-widget">
+        <div class="chat-button">
+            <svg width="30" height="30" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
+                <path d="M20 2H4C2.9 2 2 2.9 2 4V22L6 18H20C21.1 18 22 17.1 22 16V4C22 2.9 21.1 2 20 2ZM20 16H6L4 18V4H20V16Z"/>
+                <path d="M9 9H11V11H9V9ZM13 9H15V11H13V9ZM17 9H19V11H17V9Z"/>
+            </svg>
+            <div class="chat-text">Связаться с нами</div>
+        </div>
+    </div>
+
+        <!-- Include Scripts -->
+        <script src="/assets/js/script.js"></script>
+
+</body>
+</html>
