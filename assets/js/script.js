@@ -34,3 +34,4 @@ document.addEventListener('DOMContentLoaded', function() {
             document.body.insertAdjacentHTML('beforeend', '<footer><p>Footer Loading Failed</p></footer>');
         });
 });
+
