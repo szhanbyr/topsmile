@@ -1,31 +1,39 @@
 // assets/js/scripts.js
-document.addEventListener('DOMContentLoaded', function() {
-    // Add loader HTML to the page
+
+// Immediately create and add the loader before DOMContentLoaded
+(function() {
+    // Add loader HTML and styles to prevent FOUC (Flash of Unstyled Content)
     const loaderHTML = `
-        <div class="page-loader">
-            <div class="loader-circle"></div>
-            <div class="loader-text">Loading...</div>
+        <div class="page-loader" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: #ffffff; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 9999;">
+            <div class="loader-circle" style="width: 40px; height: 40px; border: 3px solid #f3f3f3; border-top: 3px solid #3498db; border-radius: 50%; animation: spin 1s linear infinite;"></div>
+            <div class="loader-text" style="margin-top: 15px; font-family: Arial, sans-serif; color: #333; font-size: 16px;">Loading...</div>
         </div>
+        <style>
+            body { opacity: 0; }
+            @keyframes spin {
+                0% { transform: rotate(0deg); }
+                100% { transform: rotate(360deg); }
+            }
+        </style>
     `;
-    document.body.insertAdjacentHTML('afterbegin', loaderHTML);
     
-    // Wrap the content in a container for the animation
-    const contentWrapper = document.createElement('div');
-    contentWrapper.className = 'page-content';
+    // We need to insert this as early as possible, before any HTML renders
+    document.addEventListener('DOMContentLoaded', function() {
+        document.body.style.opacity = '1';
+    });
     
-    // Move all body content except the loader into the wrapper
-    const loader = document.querySelector('.page-loader');
-    while (document.body.firstChild !== loader) {
-        contentWrapper.appendChild(document.body.firstChild);
-    }
-    document.body.appendChild(contentWrapper);
-    
-    // Add CSS styles for the loader and animations
+    // Add loader immediately
+    document.write(loaderHTML);
+})();
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Add full CSS styles
     const styles = document.createElement('style');
     styles.textContent = `
         body {
             margin: 0;
             overflow-x: hidden;
+            transition: opacity 0.3s ease;
         }
 
         .page-loader {
@@ -72,6 +80,18 @@ document.addEventListener('DOMContentLoaded', function() {
     `;
     document.head.appendChild(styles);
     
+    // Create content wrapper for animation
+    const contentWrapper = document.createElement('div');
+    contentWrapper.className = 'page-content';
+    
+    // Move all existing body content (except loader) into the wrapper
+    Array.from(document.body.children).forEach(child => {
+        if (!child.classList || !child.classList.contains('page-loader')) {
+            contentWrapper.appendChild(child);
+        }
+    });
+    document.body.appendChild(contentWrapper);
+    
     // Track loading status
     let headerLoaded = false;
     let footerLoaded = false;
@@ -85,12 +105,16 @@ document.addEventListener('DOMContentLoaded', function() {
                 const content = document.querySelector('.page-content');
                 
                 // Hide loader
-                loader.style.opacity = '0';
-                loader.style.visibility = 'hidden';
+                if (loader) {
+                    loader.style.opacity = '0';
+                    loader.style.visibility = 'hidden';
+                }
                 
                 // Show content
-                content.style.opacity = '1';
-                content.style.transform = 'translateY(0)';
+                if (content) {
+                    content.style.opacity = '1';
+                    content.style.transform = 'translateY(0)';
+                }
             }, 500); // Short delay to ensure everything is rendered
         }
     }
@@ -146,8 +170,11 @@ document.addEventListener('DOMContentLoaded', function() {
             
             loader.style.opacity = '0';
             loader.style.visibility = 'hidden';
-            content.style.opacity = '1';
-            content.style.transform = 'translateY(0)';
+            
+            if (content) {
+                content.style.opacity = '1';
+                content.style.transform = 'translateY(0)';
+            }
         }
     }, 5000); // 5 second maximum loading time
 });
